@@ -1,0 +1,78 @@
+CONVITE DE ORADORES — PROTÓTIPO PWA v0.2
+
+O que já funciona
+- Geração individual por quatro campos.
+- Consulta exata à lista atualizada dos esboços incorporada.
+- Mensagem pronta para WhatsApp.
+- Convite digital em HTML.
+- Arquivo de agenda em formato ICS.
+- Pré-visualização do convite.
+- Configuração para outras congregações, salva no dispositivo.
+- Geração em lote por linhas separadas por vírgula, ponto e vírgula ou |.
+- Download de todos os resultados em um único arquivo ZIP.
+- Estrutura de PWA para instalação e funcionamento offline após publicação.
+
+TESTE MAIS SIMPLES
+Abra o arquivo index.html em um computador. A geração de convites funciona sem instalação.
+Alguns navegadores podem limitar a área de transferência quando o arquivo é aberto diretamente;
+nesse caso, selecione e copie o texto manualmente.
+
+TESTE COMO PWA NO COMPUTADOR
+1. Extraia o ZIP.
+2. Abra um terminal dentro da pasta.
+3. Execute:
+   python -m http.server 8000
+4. Acesse no navegador:
+   http://localhost:8000
+5. No Chrome ou Edge, use a opção “Instalar aplicativo”, quando aparecer.
+
+PUBLICAÇÃO FUTURA
+Para instalar em celulares, a pasta deverá ser publicada em um endereço HTTPS.
+Hospedagens estáticas como GitHub Pages, Cloudflare Pages ou Netlify podem servir para isso.
+
+IMPORTANTE
+Revise todos os dados antes de compartilhar.
+Se um número não estiver na lista atualizada dos esboços, o aplicativo bloqueia a geração.
+
+ATUALIZAÇÃO v0.2
+- Compatibilidade melhorada do botão Copiar mensagem no Chrome para Android.
+- Exemplos iniciais atualizados para Abraão Alexandre e Congregação Taíba.
+
+ATUALIZAÇÃO v0.3
+- Importação do formato real exportado pelo sistema de programação.
+- Leitura correta de campos entre aspas, inclusive congregações com vírgula.
+- Uso automático das colunas: data, congregação, orador, número e tema.
+- As demais colunas são ignoradas.
+- O título final continua sendo validado pela lista atualizada dos esboços.
+- Exemplo individual atualizado para: Taíba, São Gonçalo do Amarante CE.
+
+ATUALIZAÇÃO v0.4
+- Cabeçalho do convite alterado para “Congregação Taíba”.
+- Incluído o botão “Baixar convite em PDF”.
+- O botão abre a tela de impressão do navegador; selecione “Salvar como PDF”.
+- O PDF mantém o mesmo conteúdo e organização visual do convite HTML.
+- Navegadores compatíveis preservam os links clicáveis no PDF salvo.
+
+ATUALIZAÇÃO v0.5
+- O botão PDF agora gera e baixa um arquivo .pdf real, sem abrir uma página HTML.
+- O PDF é vetorial e possui links clicáveis para agenda, rota, JW Hub, WhatsApp e ligação.
+- O botão recebeu identificação visual própria para PDF.
+- Recomenda-se abrir o arquivo no Adobe Acrobat Reader ou em outro leitor compatível.
+
+ATUALIZAÇÃO v0.6
+- PDF redesenhado para ficar mais próximo do convite HTML.
+- Cantos arredondados no cartão, blocos e botões.
+- Textos centralizados com cálculo de largura aprimorado.
+- Botões de rota e JW Hub agora aparecem como botões completos.
+- Ícone vetorial de livro incluído no cabeçalho.
+- Melhor quebra e ajuste de nomes, congregações e endereços longos.
+- Espaçamentos e hierarquia visual refinados, mantendo os links clicáveis.
+
+ATUALIZAÇÃO v0.7
+- O cabeçalho do PDF agora usa um ícone vetorial colorido inspirado no emoji 📖 do convite HTML.
+- O ícone é incorporado ao PDF e mantém a aparência em celulares e computadores, sem depender de fontes externas.
+
+ATUALIZAÇÃO v0.8
+- Removido o ícone/desenho do cabeçalho do PDF para maior compatibilidade.
+- O cabeçalho do PDF agora exibe apenas “DISCURSO PÚBLICO” e “Congregação Taíba”.
+- Mantidos o visual arredondado, os botões e os links clicáveis.

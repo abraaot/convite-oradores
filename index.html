@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#244a63">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Convite de Oradores</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+<header class="hero">
+  <h1>📖 Convite de Oradores</h1>
+  <p>Gere mensagens para WhatsApp, convites digitais e arquivos de agenda com rapidez e precisão.</p>
+  <span class="badge">Protótipo funcional v0.8</span>
+</header>
+<nav class="tabs" aria-label="Seções">
+  <button class="tab active" data-panel="singlePanel">Convite individual</button>
+  <button class="tab" data-panel="batchPanel">Gerar em lote</button>
+  <button class="tab" data-panel="configPanel">Configurações</button>
+</nav>
+
+<section id="singlePanel" class="panel active">
+<div class="card">
+<h2>Gerar convite</h2>
+<p class="help">Informe os quatro dados. O tema será obtido exclusivamente da lista atualizada dos esboços.</p>
+<div class="grid">
+  <div class="field"><label for="speaker">Orador</label><input id="speaker" placeholder="Ex.: Abraão Alexandre"></div>
+  <div class="field"><label for="origin">Congregação de origem</label><input id="origin" placeholder="Ex.: Taíba, São Gonçalo do Amarante CE"></div>
+  <div class="field"><label for="date">Data</label><input id="date" type="date"></div>
+  <div class="field"><label for="outline">Número do esboço</label><input id="outline" type="number" min="1" placeholder="Ex.: 107"></div>
+</div>
+<div class="actions"><button id="generate" class="btn primary">Gerar convite</button></div>
+<div id="singleStatus" class="status"></div>
+<div id="singleOutput" class="output" hidden>
+  <h3>Mensagem para WhatsApp</h3>
+  <div id="waOutput" class="codebox"></div>
+  <div class="actions">
+    <button id="copyWa" class="btn success">Copiar mensagem</button>
+    <button id="downloadHtml" class="btn primary">Baixar convite HTML</button>
+    <button id="downloadPdf" class="btn pdf">📄 Baixar convite em PDF</button>
+    <button id="downloadIcs" class="btn secondary">Baixar arquivo de agenda</button>
+  </div>
+  <h3>Pré-visualização do convite</h3>
+  <div class="preview"><iframe id="previewFrame" title="Pré-visualização"></iframe></div>
+</div>
+</div>
+</section>
+
+<section id="batchPanel" class="panel">
+<div class="card">
+<h2>Gerar vários convites</h2>
+<p class="help">Cole diretamente os dados exportados pelo sistema. O aplicativo aproveitará somente data, congregação de origem, orador e esboço, ignorando as demais colunas.</p>
+<textarea id="batchInput" placeholder="01-08-2026,Jardim Petrópolis - Fortaleza CE,Rodrigo Oliveira,107,107 - Você está treinando bem a sua consciência?,88,,,0,Yan Nunes,Abraão Alexandre,Rodrigo Oliveira,,Grupo 1&#10;15-08-2026,&quot;Congregação Taíba, SGA - CE&quot;,Renato Martins,31,31 - Você tem consciência da sua necessidade espiritual?,0,,,0,,,,,"></textarea>
+<div class="actions">
+  <button id="generateBatch" class="btn primary">Analisar programação</button>
+  <button id="batchDownload" class="btn success" hidden>Baixar todos em ZIP</button>
+</div>
+<div id="batchStatus" class="status"></div><div id="batchResults" class="batch-results"></div>
+</div>
+</section>
+
+<section id="configPanel" class="panel">
+<div class="card">
+<h2>Configurações da congregação</h2>
+<p class="help">Estes dados ficam salvos apenas neste dispositivo. Assim, cada congregação pode configurar sua própria versão.</p>
+<div class="config-note">Antes de compartilhar os convites, confira endereço, horário, links e contato responsável.</div><br>
+<div class="grid">
+  <div class="field"><label>Nome completo da congregação</label><input id="cfgName"></div>
+  <div class="field"><label>Nome curto</label><input id="cfgShort"></div>
+  <div class="field full"><label>Endereço</label><input id="cfgAddress"></div>
+  <div class="field"><label>Dia padrão</label><input id="cfgWeekday"></div>
+  <div class="field"><label>Horário padrão</label><input id="cfgTime"></div>
+  <div class="field full"><label>Link do JW Hub</label><input id="cfgHub"></div>
+  <div class="field"><label>Latitude</label><input id="cfgLat"></div>
+  <div class="field"><label>Longitude</label><input id="cfgLng"></div>
+  <div class="field"><label>Nome do contato</label><input id="cfgContact"></div>
+  <div class="field"><label>Telefone com DDD</label><input id="cfgPhone"></div>
+  <div class="field full"><label>Mensagem inicial do WhatsApp</label><textarea id="cfgMessage"></textarea></div>
+</div>
+<div class="actions"><button id="saveConfig" class="btn primary">Salvar configurações</button><button id="resetConfig" class="btn danger">Restaurar padrão</button></div>
+<div id="configStatus" class="status"></div>
+</div>
+</section>
+<footer class="footer">Os títulos são reproduzidos da lista atualizada dos esboços incorporada ao aplicativo.</footer>
+</div>
+<script src="app.js"></script>
+</body></html>

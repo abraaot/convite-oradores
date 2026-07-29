@@ -1,0 +1,12 @@
+{
+  "name": "Convite de Oradores",
+  "short_name": "Convites",
+  "description": "Geração de convites para oradores de discursos públicos.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#eef3f7",
+  "theme_color": "#244a63",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
