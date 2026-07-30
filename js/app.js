@@ -536,4 +536,75 @@ document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
 fillConfig();
 $("generate").onclick=generateSingle;$("sendWa").onclick=sendWhatsApp;$("copyWa").onclick=copyWhatsApp;$("downloadHtml").onclick=downloadHTML;$("downloadPdf").onclick=downloadPDF;$("downloadIcs").onclick=downloadICS;
 $("saveConfig").onclick=saveConfig;$("resetConfig").onclick=resetConfig;$("generateBatch").onclick=generateBatch;$("batchDownload").onclick=downloadBatchZip;
-if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("./sw.js");
+
+const VERSION_FILE = "./VERSION.txt";
+const VERSION_STORAGE_KEY = "conviteOradoresVersion";
+
+function normalizeVersionText(text){
+  const match=String(text||"").match(/(?:Versão\s*)?(\d+(?:\.\d+){1,2})/i);
+  return match ? match[1] : "";
+}
+function setVersionBadge(version){
+  const badge=$("appVersion");
+  if(badge) badge.textContent=version ? `Versão ${version}` : "Versão indisponível";
+}
+function showUpdateBanner(version){
+  const banner=$("updateBanner");
+  if(!banner) return;
+  $("updateTitle").textContent=`Nova versão disponível (${version})`;
+  $("updateText").textContent="Clique em Atualizar agora para carregar todos os arquivos novos.";
+  banner.hidden=false;
+}
+async function fetchPublishedVersion(){
+  const separator=VERSION_FILE.includes("?") ? "&" : "?";
+  const response=await fetch(`${VERSION_FILE}${separator}t=${Date.now()}`,{cache:"no-store"});
+  if(!response.ok) throw new Error("Não foi possível consultar a versão publicada.");
+  return normalizeVersionText(await response.text());
+}
+async function checkAppVersion(){
+  try{
+    const published=await fetchPublishedVersion();
+    if(!published) throw new Error("VERSION.txt não contém uma versão válida.");
+    setVersionBadge(published);
+    const previous=localStorage.getItem(VERSION_STORAGE_KEY);
+    if(previous && previous !== published) showUpdateBanner(published);
+    else localStorage.setItem(VERSION_STORAGE_KEY,published);
+  }catch(e){
+    const saved=localStorage.getItem(VERSION_STORAGE_KEY);
+    setVersionBadge(saved);
+  }
+}
+async function updateApplication(){
+  const button=$("updateNow");
+  if(button){button.disabled=true;button.textContent="Atualizando...";}
+  try{
+    const registration=await navigator.serviceWorker?.getRegistration();
+    if(registration){
+      await registration.update();
+      if(registration.waiting) registration.waiting.postMessage({type:"SKIP_WAITING"});
+    }
+    const published=await fetchPublishedVersion();
+    if(published) localStorage.setItem(VERSION_STORAGE_KEY,published);
+    window.location.reload();
+  }catch(e){
+    window.location.reload();
+  }
+}
+if($("updateNow")) $("updateNow").addEventListener("click",updateApplication);
+
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  navigator.serviceWorker.register("./sw.js").then(registration=>{
+    registration.update();
+    registration.addEventListener("updatefound",()=>{
+      const worker=registration.installing;
+      if(!worker) return;
+      worker.addEventListener("statechange",()=>{
+        if(worker.state==="installed" && navigator.serviceWorker.controller){
+          fetchPublishedVersion().then(version=>showUpdateBanner(version||"nova")).catch(()=>showUpdateBanner("nova"));
+        }
+      });
+    });
+  }).catch(()=>{});
+}
+checkAppVersion();
+setInterval(checkAppVersion,30*60*1000);

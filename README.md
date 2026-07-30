@@ -1,30 +1,19 @@
-# Convite de Oradores
+# Convite de Oradores — versão 1.4
 
-Aplicativo PWA para gerar convites de discursos públicos, mensagens para WhatsApp, arquivos HTML, PDF e agenda.
+Aplicativo PWA para gerar mensagens de WhatsApp, convites digitais em HTML, PDFs e arquivos de agenda para discursos públicos.
 
-## Versão
+## Novidade da versão 1.4
 
-1.3 — ao clicar em **Enviar pelo WhatsApp**, o sistema baixa automaticamente o convite HTML com nome padronizado e abre a conversa com a mensagem pronta. O arquivo recém-baixado fica entre os itens mais recentes da pasta de downloads, facilitando o anexo manual.
-
-## Principais recursos
-
-- Geração individual e em lote
-- Envio da mensagem para o WhatsApp com download automático do convite HTML
-- Opção alternativa para copiar a mensagem
-- Geração do convite completo em HTML com nome padronizado
-- Geração de PDF e arquivo de agenda
-- Ações no HTML para agenda, navegação, JW Hub e contato
-
-## Estrutura
-
-- `index.html` — página principal
-- `css/styles.css` — estilos do aplicativo
-- `js/app.js` — lógica, geração dos convites e PDF
-- `assets/icons/icon.svg` — ícone do aplicativo
-- `docs/Lista_atualizada_dos_esbocos.txt` — referência dos esboços
-- `manifest.webmanifest` — configuração da PWA
-- `sw.js` — funcionamento offline e cache
+- `VERSION.txt` passa a ser a fonte única do número da versão publicada.
+- O número mostrado no cabeçalho é lido automaticamente desse arquivo.
+- O aplicativo verifica se há uma nova versão e oferece o botão **Atualizar agora**.
+- O Service Worker usa uma estratégia de atualização mais segura:
+  - HTML em modo *network-first*;
+  - arquivos estáticos atualizados em segundo plano;
+  - limpeza automática dos caches antigos;
+  - migração automática do cache da versão 1.3.
+- Não é mais necessário limpar manualmente o cache pelo DevTools nas atualizações normais.
 
 ## Publicação
 
-O projeto está preparado para ser publicado diretamente pelo GitHub Pages a partir da pasta raiz. As alterações devem ser testadas na branch de desenvolvimento antes de serem mescladas à `main`.
+Substitua os arquivos do repositório na branch de desenvolvimento, faça commit, envie ao GitHub e incorpore na `main` por Pull Request. O GitHub Pages publicará a nova versão.
