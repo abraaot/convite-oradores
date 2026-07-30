@@ -1,0 +1,3 @@
+Convite de Oradores
+Versão 1.0
+Baseada na versão funcional v0.8.
