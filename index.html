@@ -13,8 +13,15 @@
 <header class="hero">
   <h1>📖 Convite de Oradores</h1>
   <p>Gere mensagens para WhatsApp, convites digitais e arquivos de agenda com rapidez e precisão.</p>
-  <span class="badge">Versão 1.2</span>
+  <span id="appVersion" class="badge">Verificando versão...</span>
 </header>
+<div id="updateBanner" class="update-banner" hidden role="status" aria-live="polite">
+  <div>
+    <strong id="updateTitle">Nova versão disponível</strong>
+    <p id="updateText">Uma atualização do aplicativo está pronta para ser instalada.</p>
+  </div>
+  <button id="updateNow" class="btn primary" type="button">Atualizar agora</button>
+</div>
 <nav class="tabs" aria-label="Seções">
   <button class="tab active" data-panel="singlePanel">Convite individual</button>
   <button class="tab" data-panel="batchPanel">Gerar em lote</button>
