@@ -1,4 +1,4 @@
-const CACHE = "convite-oradores-v1.0";
+const CACHE = "convite-oradores-v1.3";
 const ASSETS = [
   "./",
   "./index.html",

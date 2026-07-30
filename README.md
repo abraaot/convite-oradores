@@ -4,7 +4,16 @@ Aplicativo PWA para gerar convites de discursos públicos, mensagens para WhatsA
 
 ## Versão
 
-1.0 — primeira versão oficial organizada para publicação no GitHub Pages.
+1.3 — ao clicar em **Enviar pelo WhatsApp**, o sistema baixa automaticamente o convite HTML com nome padronizado e abre a conversa com a mensagem pronta. O arquivo recém-baixado fica entre os itens mais recentes da pasta de downloads, facilitando o anexo manual.
+
+## Principais recursos
+
+- Geração individual e em lote
+- Envio da mensagem para o WhatsApp com download automático do convite HTML
+- Opção alternativa para copiar a mensagem
+- Geração do convite completo em HTML com nome padronizado
+- Geração de PDF e arquivo de agenda
+- Ações no HTML para agenda, navegação, JW Hub e contato
 
 ## Estrutura
 
@@ -18,4 +27,4 @@ Aplicativo PWA para gerar convites de discursos públicos, mensagens para WhatsA
 
 ## Publicação
 
-O projeto está preparado para ser publicado diretamente pelo GitHub Pages a partir da branch `main` e da pasta raiz.
+O projeto está preparado para ser publicado diretamente pelo GitHub Pages a partir da pasta raiz. As alterações devem ser testadas na branch de desenvolvimento antes de serem mescladas à `main`.

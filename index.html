@@ -13,7 +13,7 @@
 <header class="hero">
   <h1>📖 Convite de Oradores</h1>
   <p>Gere mensagens para WhatsApp, convites digitais e arquivos de agenda com rapidez e precisão.</p>
-  <span class="badge">Versão 1.0</span>
+  <span class="badge">Versão 1.2</span>
 </header>
 <nav class="tabs" aria-label="Seções">
   <button class="tab active" data-panel="singlePanel">Convite individual</button>
@@ -24,10 +24,11 @@
 <section id="singlePanel" class="panel active">
 <div class="card">
 <h2>Gerar convite</h2>
-<p class="help">Informe os quatro dados. O tema será obtido exclusivamente da lista atualizada dos esboços.</p>
+<p class="help">Informe os dados do orador. O tema será obtido exclusivamente da lista atualizada dos esboços.</p>
 <div class="grid">
   <div class="field"><label for="speaker">Orador</label><input id="speaker" placeholder="Ex.: Abraão Alexandre"></div>
   <div class="field"><label for="origin">Congregação de origem</label><input id="origin" placeholder="Ex.: Taíba, São Gonçalo do Amarante CE"></div>
+  <div class="field"><label for="speakerPhone">Telefone/WhatsApp do orador</label><input id="speakerPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ex.: (85) 99999-9999"></div>
   <div class="field"><label for="date">Data</label><input id="date" type="date"></div>
   <div class="field"><label for="outline">Número do esboço</label><input id="outline" type="number" min="1" placeholder="Ex.: 107"></div>
 </div>
@@ -37,6 +38,7 @@
   <h3>Mensagem para WhatsApp</h3>
   <div id="waOutput" class="codebox"></div>
   <div class="actions">
+    <button id="sendWa" class="btn whatsapp">Enviar pelo WhatsApp</button>
     <button id="copyWa" class="btn success">Copiar mensagem</button>
     <button id="downloadHtml" class="btn primary">Baixar convite HTML</button>
     <button id="downloadPdf" class="btn pdf">📄 Baixar convite em PDF</button>

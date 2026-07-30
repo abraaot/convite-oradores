@@ -63,10 +63,20 @@ function calendarStamp(d,time){
   const f=x=>`${x.getFullYear()}${pad(x.getMonth()+1)}${pad(x.getDate())}T${pad(x.getHours())}${pad(x.getMinutes())}00`;
   return [f(start),f(end),start,end];
 }
-function buildData(speaker,origin,dateValue,outlineNo){
+function normalizeBrazilPhone(value){
+  let digits=String(value||"").replace(/\D/g,"");
+  if(digits.startsWith("00")) digits=digits.slice(2);
+  if(digits.length===10 || digits.length===11) digits="55"+digits;
+  if(!/^55\d{10,11}$/.test(digits)) throw new Error("Informe um telefone válido com DDD. Exemplo: (85) 99999-9999.");
+  return digits;
+}
+function buildData(speaker,origin,dateValue,outlineNo,speakerPhone="",requireSpeakerPhone=false){
   const c=loadConfig(), d=parseDate(dateValue), no=Number(outlineNo), title=OUTLINES[no];
   if(!speaker||!origin||!d||!no) throw new Error("Preencha orador, congregação de origem, data e número do esboço.");
   if(!title) throw new Error(`O esboço ${outlineNo} não foi localizado na lista atualizada dos esboços.`);
+  let speakerPhoneInternational="";
+  if(speakerPhone) speakerPhoneInternational=normalizeBrazilPhone(speakerPhone);
+  else if(requireSpeakerPhone) throw new Error("Informe o telefone/WhatsApp do orador.");
   const [startStamp,endStamp,start,end]=calendarStamp(d,c.time);
   const dateText=`${weekday(d)}, ${brDate(d)}`;
   const maps=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.latitude+","+c.longitude)}`;
@@ -74,7 +84,7 @@ function buildData(speaker,origin,dateValue,outlineNo){
   const tel=`tel:+55${c.contactPhone}`;
   const details=`Orador: ${speaker}\nCongregação de origem: ${origin}\nTema: ${no} – "${title}"`;
   const gcal=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Discurso público – "+title)}&dates=${startStamp}/${endStamp}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(c.address)}`;
-  return {speaker,origin,d,no,title,c,dateText,maps,wa,tel,gcal,start,end};
+  return {speaker,origin,speakerPhone:speakerPhoneInternational,d,no,title,c,dateText,maps,wa,tel,gcal,start,end};
 }
 function whatsappText(x){
 return `*DISCURSO PÚBLICO CONGREGAÇÃO ${x.c.congregationShort.toUpperCase()}*
@@ -92,9 +102,7 @@ ${x.no} – "${x.title}"
 📍 *Congregação:* ${x.c.congregationName}
 *Endereço:* ${x.c.address}.
 
-${x.c.jwHub}
-
-*Use o arquivo abaixo para adicionar este compromisso à sua agenda.*
+*Acesse o convite completo neste arquivo.*
 👇👇👇`;
 }
 function invitationHTML(x){
@@ -111,7 +119,7 @@ function downloadBlob(name,content,type="text/plain;charset=utf-8"){ const a=doc
 function generateSingle(){
   clearStatus("singleStatus");
   try{
-    const x=buildData($("speaker").value.trim(),$("origin").value.trim(),$("date").value,$("outline").value);
+    const x=buildData($("speaker").value.trim(),$("origin").value.trim(),$("date").value,$("outline").value,$("speakerPhone").value.trim(),true);
     currentInvitation=x;
     $("waOutput").textContent=whatsappText(x);
     $("previewFrame").srcdoc=invitationHTML(x);
@@ -119,6 +127,50 @@ function generateSingle(){
     showStatus("singleStatus","Convite gerado e conferido com a lista atualizada dos esboços.","ok");
   }catch(e){ $("singleOutput").hidden=true;showStatus("singleStatus",e.message,"error"); }
 }
+function buildWhatsAppUrl(phone, message){
+  const validPhone=normalizeBrazilPhone(phone);
+  const cleanMessage=String(message||"")
+    .replace(/\r\n?/g,"\n")
+    .normalize("NFC");
+  return `https://api.whatsapp.com/send?phone=${encodeURIComponent(validPhone)}&text=${encodeURIComponent(cleanMessage)}`;
+}
+function invitationHtmlFilename(x){
+  const safeName=String(x.speaker||"Orador")
+    .normalize("NFC")
+    .replace(/[\\/:*?"<>|]/g,"")
+    .replace(/\s+/g," ")
+    .trim() || "Orador";
+  const date=brDate(x.d).replaceAll("/","-");
+  return `Convite - ${safeName} - ${date}.html`;
+}
+function saveInvitationHTML(x){
+  downloadBlob(invitationHtmlFilename(x),invitationHTML(x),"text/html;charset=utf-8");
+}
+function sendWhatsApp(){
+  if(!currentInvitation){
+    showStatus("singleStatus","Gere o convite antes de enviar a mensagem.","error");
+    return;
+  }
+  try{
+    const url=buildWhatsAppUrl(currentInvitation.speakerPhone,whatsappText(currentInvitation));
+
+    // Salva primeiro o convite HTML. Assim, ele fica entre os arquivos mais
+    // recentes para ser anexado manualmente na conversa do WhatsApp.
+    saveInvitationHTML(currentInvitation);
+
+    const link=document.createElement("a");
+    link.href=url;
+    link.target="_blank";
+    link.rel="noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    showStatus("singleStatus",`O convite ${invitationHtmlFilename(currentInvitation)} foi salvo e o WhatsApp foi aberto com a mensagem pronta. Anexe o arquivo recém-baixado e toque em Enviar.`,"ok");
+  }catch(e){
+    showStatus("singleStatus",e.message||"Não foi possível preparar o convite para o WhatsApp.","error");
+  }
+}
+
 async function copyWhatsApp(){
   if(!currentInvitation) return;
   const text = whatsappText(currentInvitation);
@@ -170,7 +222,8 @@ async function copyWhatsApp(){
 }
 function downloadHTML(){
   if(!currentInvitation)return;
-  downloadBlob(`Convite_${slug(currentInvitation.speaker)}_${brDate(currentInvitation.d).replaceAll("/","-")}.html`,invitationHTML(currentInvitation),"text/html;charset=utf-8");
+  saveInvitationHTML(currentInvitation);
+  showStatus("singleStatus",`Arquivo ${invitationHtmlFilename(currentInvitation)} salvo na pasta de downloads.`,"ok");
 }
 function pdfWinAnsiBytes(text){
   const map={
@@ -481,6 +534,6 @@ document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
   b.classList.add("active");$(b.dataset.panel).classList.add("active");
 }));
 fillConfig();
-$("generate").onclick=generateSingle;$("copyWa").onclick=copyWhatsApp;$("downloadHtml").onclick=downloadHTML;$("downloadPdf").onclick=downloadPDF;$("downloadIcs").onclick=downloadICS;
+$("generate").onclick=generateSingle;$("sendWa").onclick=sendWhatsApp;$("copyWa").onclick=copyWhatsApp;$("downloadHtml").onclick=downloadHTML;$("downloadPdf").onclick=downloadPDF;$("downloadIcs").onclick=downloadICS;
 $("saveConfig").onclick=saveConfig;$("resetConfig").onclick=resetConfig;$("generateBatch").onclick=generateBatch;$("batchDownload").onclick=downloadBatchZip;
 if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("./sw.js");
